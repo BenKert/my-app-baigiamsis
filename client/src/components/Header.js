@@ -1,7 +1,9 @@
 import styled from "styled-components";
+import { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDownUpAcrossLine } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import UserContext from "../UserContext";
 
 const StyledHeader = styled.header`
   background-color: #323d38;
@@ -37,7 +39,7 @@ const SearchInput = styled.input`
   margin-top: 12px;
 `;
 
-const ProfileLink = styled.a`
+const ProfileLink = styled(Link)`
   color: #fff;
   text-decoration: none;
   display: flex;
@@ -46,6 +48,8 @@ const ProfileLink = styled.a`
 `;
 
 export default function Header() {
+  const user = useContext(UserContext);
+
   return (
     <StyledHeader>
       <LogoLink to={"/"} className="logo">
@@ -57,9 +61,16 @@ export default function Header() {
       <form action="" className="serach">
         <SearchInput type="text" placeholder="Search..." />
       </form>
-      <ProfileLink href="" className="profile">
-        Benediktas
-      </ProfileLink>
+      {user && (
+        <ProfileLink to={"/profile"} className="profile">
+          Benediktas
+        </ProfileLink>
+      )}
+      {!user && (
+        <ProfileLink to={"/login"} className="profile">
+          Log in
+        </ProfileLink>
+      )}
     </StyledHeader>
   );
 }
