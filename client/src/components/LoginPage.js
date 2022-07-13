@@ -1,9 +1,10 @@
-import { Component } from "react";
+import { Component, useContext } from "react";
 import styled from "styled-components";
 import BlueButton from "./BlueButton";
 import Header1 from "./Header1";
 import Input from "./Input";
 import axios from "axios";
+import UserContext from "../UserContext";
 
 const Container = styled.div`
   margin: 20px;
@@ -19,10 +20,18 @@ class LoginPage extends Component {
   }
 
   login() {
-    axios.post("http://localhost:3030/login", {
-      email: this.state.email,
-      password: this.state.password,
-    });
+    axios
+      .post(
+        "http://localhost:3030/login",
+        {
+          email: this.state.email,
+          password: this.state.password,
+        },
+        { withCredentials: true }
+      )
+      .then(() => {
+        this.context.checkAuth();
+      });
   }
 
   render() {
@@ -48,5 +57,7 @@ class LoginPage extends Component {
     );
   }
 }
+
+LoginPage.contextType = UserContext;
 
 export default LoginPage;

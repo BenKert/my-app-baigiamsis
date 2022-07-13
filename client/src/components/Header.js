@@ -48,8 +48,7 @@ const ProfileLink = styled(Link)`
 `;
 
 export default function Header() {
-  const user = useContext(UserContext);
-
+  const { user } = useContext(UserContext);
   return (
     <StyledHeader>
       <LogoLink to={"/"} className="logo">
@@ -63,7 +62,7 @@ export default function Header() {
       </form>
       {user && (
         <ProfileLink to={"/profile"} className="profile">
-          Benediktas
+          {user.email}
         </ProfileLink>
       )}
       {!user && (
