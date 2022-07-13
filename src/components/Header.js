@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDownUpAcrossLine } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const StyledHeader = styled.header`
   background-color: #323d38;
@@ -10,7 +11,7 @@ const StyledHeader = styled.header`
   grid-column-gap: 20px;
 `;
 
-const LogoLink = styled.a`
+const LogoLink = styled(Link)`
   color: #fff;
   text-decoration: none;
   display: flex;
@@ -47,7 +48,7 @@ const ProfileLink = styled.a`
 export default function Header() {
   return (
     <StyledHeader>
-      <LogoLink href="" className="logo">
+      <LogoLink to={"/"} className="logo">
         <FontAwesomeIcon icon={faArrowDownUpAcrossLine} size="xl" />
         <span>
           Stuck <b>withoutFlow</b>
