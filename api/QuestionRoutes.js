@@ -51,7 +51,7 @@ QuestionRoutes.get("/questions", (req, res) => {
     .then((questions) => {
       res.json(questions).send();
     })
-    .catch(() => res.sendStatus(422));
+    .catch(() => res.status(422));
 });
 
 export default QuestionRoutes;
