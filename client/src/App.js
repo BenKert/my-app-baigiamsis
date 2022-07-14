@@ -9,6 +9,7 @@ import GlobalStyles from "./GlobalStyles";
 import UserContext from "./UserContext";
 import LoginPage from "./components/LoginPage";
 import axios from "axios";
+import ProfilePage from "./components/ProfilePage";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -41,6 +42,7 @@ function App() {
           <Route path="/ask" element={<AskPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </UserContext.Provider>
     </div>

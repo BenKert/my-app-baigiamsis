@@ -64,15 +64,24 @@ UserRoutes.post("/register", (req, res) => {
         db("users")
           .insert({ email, password: hashedPassword })
           .then(() => {
-            res.status(201).send("User created");
+            jwt.sign(email, secret, (err, token) => {
+              if (err) res.sendStatus(403);
+              else {
+                res.cookie("token", token).status(201).send("User created");
+              }
+            });
           })
           .catch((e) => {
             res.status(422).send("User creation failed");
           });
       } else {
-        res.status(422).send("Email already exists");
+        res.status(422).send("Email already exists. Please try to login");
       }
     })
     .catch((e) => res.status(422).send(e));
+});
+
+UserRoutes.post("/logout", (req, res) => {
+  res.clearCookie("token").send("ok");
 });
 export default UserRoutes;

@@ -6,6 +6,7 @@ import Input from "./Input";
 import axios from "axios";
 import UserContext from "../UserContext";
 import { Navigate } from "react-router-dom";
+import ErrorBox from "./ErrorBox";
 
 const Container = styled.div`
   margin: 20px;
@@ -17,11 +18,13 @@ class LoginPage extends Component {
     this.state = {
       email: "",
       password: "",
-      redirectToHomePage: false,
+      navigateToHomePage: false,
+      error: false,
     };
   }
 
-  login() {
+  login(e) {
+    e.preventDefault();
     axios
       .post(
         "http://localhost:3030/login",
@@ -32,30 +35,35 @@ class LoginPage extends Component {
         { withCredentials: true }
       )
       .then(() => {
-        this.context.checkAuth().then(() => {});
-        this.setState({ redirectToHomePage: true });
-      });
+        this.context.checkAuth().then(() => {
+          this.setState({ error: false, navigateToHomePage: true });
+        });
+      })
+      .catch(() => this.setState({ error: true }));
   }
 
   render() {
     return (
       <>
-        {this.state.redirectToHomePage && <Navigate to={"/"} />}
+        {this.state.navigateToHomePage && <Navigate to={"/"} />}
         <Container>
           <Header1 style={{ marginBottom: "20px" }}>Log-in</Header1>
-          <Input
-            placeholder={"email"}
-            type="email"
-            value={this.state.email}
-            onChange={(e) => this.setState({ email: e.target.value })}
-          />
-          <Input
-            placeholder={"password"}
-            type="password"
-            value={this.state.password}
-            onChange={(e) => this.setState({ password: e.target.value })}
-          />
-          <BlueButton onClick={() => this.login()}>Login</BlueButton>
+          {this.state.error && <ErrorBox>Login failed</ErrorBox>}
+          <form onSubmit={(e) => this.login(e)}>
+            <Input
+              placeholder={"email"}
+              type="email"
+              value={this.state.email}
+              onChange={(e) => this.setState({ email: e.target.value })}
+            />
+            <Input
+              placeholder={"password"}
+              type="password"
+              value={this.state.password}
+              onChange={(e) => this.setState({ password: e.target.value })}
+            />
+            <BlueButton type="submit">Login</BlueButton>
+          </form>
         </Container>
       </>
     );
