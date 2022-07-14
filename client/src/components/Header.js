@@ -47,6 +47,11 @@ const ProfileLink = styled(Link)`
   justify-content: center;
 `;
 
+const LinkDiv = styled.div`
+  display: flex;
+  justify-content: space-around;
+`;
+
 export default function Header() {
   const { user } = useContext(UserContext);
   return (
@@ -66,9 +71,14 @@ export default function Header() {
         </ProfileLink>
       )}
       {!user && (
-        <ProfileLink to={"/login"} className="profile">
-          Log in
-        </ProfileLink>
+        <LinkDiv>
+          <ProfileLink to={"/login"} className="profile">
+            Log in
+          </ProfileLink>
+          <ProfileLink to={"/register"} className="profile">
+            Register
+          </ProfileLink>
+        </LinkDiv>
       )}
     </StyledHeader>
   );
