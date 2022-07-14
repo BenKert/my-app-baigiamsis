@@ -29,19 +29,28 @@ UserRoutes.get("/profile", (req, res) => {
 
 UserRoutes.post("/login", (req, res) => {
   const { email, password } = req.body;
-  const isLoginOk = email === "test@example.com" && password === "test";
-  isLoginOk &&
-    jwt.sign(email, secret, (err, token) => {
-      if (err) {
-        res.status(403).send(err);
-      } else {
-        res.cookie("token", token).send();
-      }
-    });
+  db.select("password")
+    .where({ email })
+    .from("users")
+    .first()
+    .then((user) => {
+      const isLoginOk = bcrypt.compareSync(password, user.password);
+      isLoginOk &&
+        jwt.sign(email, secret, (err, token) => {
+          if (err) {
+            res.status(403).send(err);
+          } else {
+            res.cookie("token", token).send("OK");
+          }
+        });
 
-  if (!isLoginOk) {
-    res.status(403).send();
-  }
+      if (!isLoginOk) {
+        res.status(403).send("Username or password is not correct");
+      }
+    })
+    .catch((e) => {
+      res.status(422).send("something went wrong");
+    });
 });
 
 UserRoutes.post("/register", (req, res) => {
