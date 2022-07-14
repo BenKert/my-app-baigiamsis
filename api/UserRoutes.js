@@ -51,9 +51,15 @@ UserRoutes.post("/register", (req, res) => {
     .where({ email })
     .then((rows) => {
       if (rows.length === 0) {
-        const hashedPassword = bcrypt.hashSync(password);
-        db("users").insert({ email, password: hashedPassword });
-        res.status(201).send("User created");
+        const hashedPassword = bcrypt.hashSync(password, 10);
+        db("users")
+          .insert({ email, password: hashedPassword })
+          .then(() => {
+            res.status(201).send("User created");
+          })
+          .catch((e) => {
+            res.status(422).send("User creation failed");
+          });
       } else {
         res.status(422).send("Email already exists");
       }

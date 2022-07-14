@@ -11,38 +11,33 @@ const Container = styled.div`
   margin: 20px;
 `;
 
-class LoginPage extends Component {
+class RegisterPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
       password: "",
-      redirectToHomePage: false,
     };
   }
 
-  login() {
+  register() {
     axios
       .post(
-        "http://localhost:3030/login",
+        "http://localhost:3030/register",
         {
           email: this.state.email,
           password: this.state.password,
         },
         { withCredentials: true }
       )
-      .then(() => {
-        this.context.checkAuth().then(() => {});
-        this.setState({ redirectToHomePage: true });
-      });
+      .then(() => {});
   }
 
   render() {
     return (
       <>
-        {this.state.redirectToHomePage && <Navigate to={"/"} />}
         <Container>
-          <Header1 style={{ marginBottom: "20px" }}>Log-in</Header1>
+          <Header1 style={{ marginBottom: "20px" }}>Register</Header1>
           <Input
             placeholder={"email"}
             type="email"
@@ -55,13 +50,13 @@ class LoginPage extends Component {
             value={this.state.password}
             onChange={(e) => this.setState({ password: e.target.value })}
           />
-          <BlueButton onClick={() => this.login()}>Login</BlueButton>
+          <BlueButton onClick={() => this.register()}>Register</BlueButton>
         </Container>
       </>
     );
   }
 }
 
-LoginPage.contextType = UserContext;
+RegisterPage.contextType = UserContext;
 
-export default LoginPage;
+export default RegisterPage;
