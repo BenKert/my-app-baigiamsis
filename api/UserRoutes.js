@@ -1,17 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import knex from "knex";
 import bcrypt from "bcrypt";
-
-const db = knex({
-  client: "mysql2",
-  connection: {
-    host: "localhost",
-    user: "root",
-    password: "sinsila",
-    database: "Baigiamasis",
-  },
-});
+import db from "./db.js";
 
 const UserRoutes = express.Router();
 const secret = "secret123";
@@ -40,7 +30,13 @@ UserRoutes.post("/login", (req, res) => {
           if (err) {
             res.status(403).send(err);
           } else {
-            res.cookie("token", token).send("OK");
+            db("users")
+              .where({ email })
+              .update({ token })
+              .then(() => {
+                res.cookie("token", token).send("OK");
+              })
+              .catch(() => res.sendStatus(422));
           }
         });
 

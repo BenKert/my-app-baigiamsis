@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import UserRoutes from "./UserRoutes.js";
+import QuestionRoutes from "./QuestionRoutes.js";
 
 const app = express();
 const port = 3030;
@@ -17,11 +18,8 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
-
 app.use(UserRoutes);
+app.use(QuestionRoutes);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);

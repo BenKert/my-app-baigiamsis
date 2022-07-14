@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Input from "./Input";
 import { useState } from "react";
+import axios from "axios";
 
 const Container = styled.div`
   margin: 20px;
@@ -35,25 +36,42 @@ export default function AskPage() {
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionBody, setQuestionBody] = useState("");
 
+  function sendTheQuestion(e) {
+    e.preventDefault();
+    axios
+      .post(
+        "http://localhost:3030/questions",
+        {
+          title: questionTitle,
+          content: questionBody,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        console.log(response);
+      });
+  }
+
   return (
     <Container>
       <Header1 style={{ marginBottom: "20px" }}>Ask a public question</Header1>
-      <Input
-        type="text"
-        value={questionTitle}
-        onChange={(e) => setQuestionTitle(e.target.value)}
-        placeholder="Title of your question"
-      />
-      <QuestionBodyTextarea
-        onChange={(e) => setQuestionBody(e.target.value)}
-        placeholder="Please describe your question and provide all of the info you can here!"
-      >
-        {questionBody}
-      </QuestionBodyTextarea>
-      <PreviewArea>
-        <ReactMarkdown children={questionBody} remarkPlugins={[remarkGfm]} />
-      </PreviewArea>
-      <BlueButton>Post question</BlueButton>
+      <form onSubmit={(e) => sendTheQuestion(e)}>
+        <Input
+          type="text"
+          value={questionTitle}
+          onChange={(e) => setQuestionTitle(e.target.value)}
+          placeholder="Title of your question"
+        />
+        <QuestionBodyTextarea
+          onChange={(e) => setQuestionBody(e.target.value)}
+          placeholder="Please describe your question and provide all of the info you can here!"
+          value={questionBody}
+        />
+        <PreviewArea>
+          <ReactMarkdown children={questionBody} remarkPlugins={[remarkGfm]} />
+        </PreviewArea>
+        <BlueButton type="submit">Post question</BlueButton>
+      </form>
     </Container>
   );
 }
