@@ -19,8 +19,8 @@ QuestionRoutes.post("/questions", (req, res) => {
             parent_id: null,
             author_id: user.id,
           })
-          .then(() => {
-            res.sendStatus(201);
+          .then((data) => {
+            res.json(data).sendStatus(201);
           })
           .catch(() => res.sendStatus(422));
       } else {
@@ -39,9 +39,19 @@ QuestionRoutes.get("/questions/:id", (req, res) => {
       res.json(question).send();
     })
     .catch(() => {
-      res.sendStatus(422);
-      console.log(id);
+      res.status(422);
     });
+});
+
+QuestionRoutes.get("/questions", (req, res) => {
+  db.select("*")
+    .from("posts")
+    .where({ parent_id: null })
+    .orderBy("id", "desc")
+    .then((questions) => {
+      res.json(questions).send();
+    })
+    .catch(() => res.sendStatus(422));
 });
 
 export default QuestionRoutes;

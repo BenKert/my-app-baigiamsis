@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import Input from "./Input";
 import { useState } from "react";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 const Container = styled.div`
   margin: 20px;
@@ -35,6 +36,7 @@ const PreviewArea = styled.div`
 export default function AskPage() {
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionBody, setQuestionBody] = useState("");
+  const [navigateTo, setNavigateTo] = useState("");
 
   function sendTheQuestion(e) {
     e.preventDefault();
@@ -48,12 +50,14 @@ export default function AskPage() {
         { withCredentials: true }
       )
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
+        setNavigateTo("/questions/" + response.data[0]);
       });
   }
 
   return (
     <Container>
+      {navigateTo && <Navigate to={navigateTo} />}
       <Header1 style={{ marginBottom: "20px" }}>Ask a public question</Header1>
       <form onSubmit={(e) => sendTheQuestion(e)}>
         <Input
