@@ -33,10 +33,11 @@ QuestionRoutes.get("/questions/:id", (req, res) => {
   const id = req.params.id;
   db.select("*")
     .from("posts")
-    .where({ id })
+    .join("users", "users.id", "=", "posts.author_id")
+    .where({ "posts.id": id })
     .first()
     .then((question) => {
-      res.json(question).send();
+      res.json(question);
     })
     .catch(() => {
       res.status(422);
