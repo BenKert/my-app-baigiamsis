@@ -4,9 +4,10 @@ import Header1 from "./Header1";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Input from "./Input";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import ReactTags from "react-tag-autocomplete";
 
 const Container = styled.div`
   margin: 20px;
@@ -34,9 +35,13 @@ const PreviewArea = styled.div`
 `;
 
 export default function AskPage() {
+  const reactTags = React.createRef();
+
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionBody, setQuestionBody] = useState("");
   const [navigateTo, setNavigateTo] = useState("");
+  const [tags, setTags] = useState([]);
+  const [tagSuggestions, setTagSuggestions] = useState([]);
 
   function sendTheQuestion(e) {
     e.preventDefault();
@@ -46,8 +51,11 @@ export default function AskPage() {
         {
           title: questionTitle,
           content: questionBody,
+          tags: tags.map((tag) => tag.id),
         },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       )
       .then((response) => {
         console.log(response.data);
@@ -55,6 +63,31 @@ export default function AskPage() {
       });
   }
 
+  function getTags() {
+    axios.get("http://localhost:3030/tags").then((response) => {
+      setTagSuggestions(response.data);
+    });
+  }
+
+  function onTagAddition(tag) {
+    const chosenTags = tags;
+    chosenTags.push(tag);
+    setTags(chosenTags);
+  }
+
+  function onTagDelete(indexToDelete) {
+    const newTags = [];
+    for (let i = 0; i < tags.length; i++) {
+      if (i !== indexToDelete) {
+        newTags.push(tags[i]);
+      }
+    }
+    setTags(newTags);
+  }
+
+  useEffect(() => {
+    getTags();
+  }, []);
   return (
     <Container>
       {navigateTo && <Navigate to={navigateTo} />}
@@ -74,6 +107,13 @@ export default function AskPage() {
         <PreviewArea>
           <ReactMarkdown children={questionBody} remarkPlugins={[remarkGfm]} />
         </PreviewArea>
+        <ReactTags
+          ref={reactTags}
+          tags={tags}
+          suggestions={tagSuggestions}
+          onDelete={(e) => onTagDelete(e)}
+          onAddition={(e) => onTagAddition(e)}
+        />
         <BlueButton type="submit">Post question</BlueButton>
       </form>
     </Container>

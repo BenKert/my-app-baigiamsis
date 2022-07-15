@@ -20,9 +20,9 @@ QuestionRoutes.post("/questions", (req, res) => {
             author_id: user.id,
           })
           .then((data) => {
-            res.json(data).sendStatus(201);
+            res.json(data).status(201);
           })
-          .catch(() => res.sendStatus(422));
+          .catch(() => res.status(422).send);
       } else {
         res.sendStatus(403);
       }

@@ -32,6 +32,45 @@ h1{
 h2{
   font-size: 1.6rem;
 }
+
+// tags
+.react-tags{
+  margin-bottom: 20px;
+}
+
+.react-tags__selected{
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.react-tags__selected-tag{
+
+  border: 0; 
+  display: inline-block;
+  margin-right: 3px;
+  background-color: #d9b08c;
+  padding: 3px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  color: #d1e8e2;
+
+}
+
+.react-tags__search{
+  display: inline-block;
+}
+
+input.react-tags__search-input{
+  background: none;
+  border: 1px solid #777;
+  border-radius: 3px;
+  display: inline-block;
+  width: 100%;
+  min-width: 200px;
+  box-sizing: border-box;
+  padding: 8px;
+  color: #fff;
+}
 `;
 
 export default GlobalStyles;
